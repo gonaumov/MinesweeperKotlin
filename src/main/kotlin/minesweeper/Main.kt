@@ -5,5 +5,6 @@ fun main(args: Array<String>) {
     val minesNumber = readln().toInt()
     val minesweeperGame = MinesweeperGame(9, 9)
     minesweeperGame.setMines(minesNumber)
+    minesweeperGame.markMines()
     println(minesweeperGame.getBoard())
 }
