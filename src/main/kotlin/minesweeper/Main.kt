@@ -1,23 +1,28 @@
 package minesweeper
 
+import java.lang.NumberFormatException
+
 fun main(args: Array<String>) {
     println("How many mines do you want on the field?")
     val minesNumber = readln().toInt()
-    val minesweeperGame = MinesweeperGame(9, 9)
-    minesweeperGame.setMines(minesNumber)
-    minesweeperGame.markMines()
-    println(minesweeperGame.getBoard())
-    do {
-        println("Set/delete mines marks (x and y coordinates):")
-        val (x, y) = readln().trim().split(" ").map {
-            it.toInt()
+    val minesweeperGame = MinesweeperGame(9, 9, minesNumber)
+    while (true) {
+        println(minesweeperGame.getBoard())
+        println(minesweeperGame.gameState.message)
+        if (minesweeperGame.gameState != GameState.IN_PROGRESS) {
+            break
         }
+        val arguments = readln().trim().split(" ")
         try {
-            minesweeperGame.markCell(y, x)
-            println(minesweeperGame.getBoard())
+            if (arguments.size != 3) {
+                throw MarkCellException("usage: <number> <number> <mode>")
+            }
+            val (x, y, mode) = arguments
+            minesweeperGame.markCell(y.toInt(), x.toInt(), mode)
+        } catch (ex: NumberFormatException) {
+            println("Please enter only numbers for coordinates.")
         } catch (ex: MarkCellException) {
             println(ex.message)
         }
-    } while (!minesweeperGame.minesAreMarkedProperly)
-    println("Congratulations! You found all the mines!")
+    }
 }
